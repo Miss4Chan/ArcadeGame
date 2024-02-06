@@ -12,8 +12,8 @@ SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 FPSCLOCK = pygame.time.Clock()
 BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 WALLBORDER = 10
-MACHINE_WIDTH = 60
-MACHINE_HEIGHT = 100
+MACHINE_WIDTH = 80
+MACHINE_HEIGHT = 120
 DOOR_WIDTH = 120
 
 WHITE = (255, 255, 255)
@@ -35,11 +35,11 @@ WALLS = [
 #mislam deka touple e odgovorot za da znam koja mashina e ;')
 MACHINES = [
     (pygame.Rect(WALLBORDER, 150, MACHINE_WIDTH, MACHINE_HEIGHT), "scriptName"),  
-    (pygame.Rect(330, WALLBORDER, MACHINE_WIDTH, MACHINE_HEIGHT),"eden"),
-    (pygame.Rect(410, WALLBORDER, MACHINE_WIDTH, MACHINE_HEIGHT),"dva"),
+    (pygame.Rect(HALF_WINWIDTH-MACHINE_WIDTH, WALLBORDER+10, MACHINE_WIDTH, MACHINE_HEIGHT),"eden"),
+    (pygame.Rect(HALF_WINWIDTH+10, WALLBORDER+10, MACHINE_WIDTH, MACHINE_HEIGHT),"dva"),
     (pygame.Rect(SCREEN_WIDTH-WALLBORDER-MACHINE_WIDTH, 150, MACHINE_WIDTH, MACHINE_HEIGHT),"tri"),
-    (pygame.Rect(330, 270, MACHINE_WIDTH, MACHINE_HEIGHT),"4"),
-    (pygame.Rect(410, 270, MACHINE_WIDTH, MACHINE_HEIGHT),"5")
+    (pygame.Rect(HALF_WINWIDTH-MACHINE_WIDTH, 270, MACHINE_WIDTH, MACHINE_HEIGHT),"4"),
+    (pygame.Rect(HALF_WINWIDTH+10, 270, MACHINE_WIDTH, MACHINE_HEIGHT),"5")
 ]
 
 
@@ -124,7 +124,7 @@ def handle_player_movement(keys, player_speed=9):
         
     if player.left <= WALLBORDER: player.left = WALLBORDER
     if player.right >= SCREEN_WIDTH - WALLBORDER: player.right = SCREEN_WIDTH - WALLBORDER
-    if player.top <= WALLBORDER: player.top = WALLBORDER
+    if player.top <= WALLBORDER+MACHINE_HEIGHT: player.top = WALLBORDER + MACHINE_HEIGHT
     if player.bottom >= SCREEN_HEIGHT - WALLBORDER: player.bottom = SCREEN_HEIGHT - WALLBORDER
 
 
@@ -154,8 +154,16 @@ def main():
                 pygame.draw.rect(SCREEN, WHITE, wall)
             pygame.draw.rect(SCREEN, BLUE, player)
             pygame.draw.rect(SCREEN, GREEN, entrance)
+            imp = pygame.image.load("bg_wall.png").convert()
+            #TODO: 
+            #imp2= pygame.image.load("bg_floor.png").convert()
+            SCREEN.blit(imp, (WALLBORDER, WALLBORDER))
+ 
             for machine in MACHINES:
-                pygame.draw.rect(SCREEN, RED, machine[0])
+               #pygame.draw.rect(SCREEN, RED, machine[0])
+               #Convert alpha ni treba radi pngto da e transparent ugh ;(
+               m = pygame.image.load("machine.PNG").convert_alpha()
+               SCREEN.blit(m, (machine[0].left, machine[0].top))
 
             for event in pygame.event.get():
                 if event.type == QUIT:
