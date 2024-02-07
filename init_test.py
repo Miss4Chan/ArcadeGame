@@ -1,6 +1,7 @@
 import pygame
 import sys
 from pygame.locals import *
+from memorypuzzle import main as memorypuzzlemain
 
 #The setuppp :))
 pygame.init()
@@ -15,6 +16,7 @@ WALLBORDER = 10
 MACHINE_WIDTH = 80
 MACHINE_HEIGHT = 120
 DOOR_WIDTH = 120
+SCORE = 0
 
 WHITE = (255, 255, 255)
 BLUE = (0, 128, 255)
@@ -34,7 +36,7 @@ WALLS = [
 
 #mislam deka touple e odgovorot za da znam koja mashina e ;')
 MACHINES = [
-    (pygame.Rect(WALLBORDER, 150, MACHINE_WIDTH, MACHINE_HEIGHT), "scriptName"),  
+    (pygame.Rect(WALLBORDER, 150, MACHINE_WIDTH, MACHINE_HEIGHT), "memorypuzzle"),  
     (pygame.Rect(HALF_WINWIDTH-MACHINE_WIDTH, WALLBORDER+10, MACHINE_WIDTH, MACHINE_HEIGHT),"eden"),
     (pygame.Rect(HALF_WINWIDTH+10, WALLBORDER+10, MACHINE_WIDTH, MACHINE_HEIGHT),"dva"),
     (pygame.Rect(SCREEN_WIDTH-WALLBORDER-MACHINE_WIDTH, 150, MACHINE_WIDTH, MACHINE_HEIGHT),"tri"),
@@ -54,6 +56,15 @@ def draw_interaction_text(text, font, color, surface, x, y):
     surface.blit(textobj, textrect)
 
 
+def start_game(game_name):
+    global SCORE
+    if game_name == "memorypuzzle":
+        print(f"Starting game: {game_name}")
+        player.x,player.y, SCORE = memorypuzzlemain(player.x, player.y, SCORE)
+        
+
+        # For example: game_script.main()
+
 def check_proximity(player, machines, distance=20):
     for machine in machines:
         if player.colliderect(machine[0].inflate(distance, distance)):
@@ -67,6 +78,8 @@ def handle_player_interaction(keys, player, machines):
         # Placeholder for activating something
         #TODO: ova tuka mn bitno vo zavisnost od koja mashina e 
         print("Activated machine!") 
+        start_game(close_machine[1])
+        pygame.event.clear() #so start game go reshavame choiceot na script
         
 
 
