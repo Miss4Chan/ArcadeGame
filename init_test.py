@@ -17,7 +17,7 @@ WALLBORDER = 10
 MACHINE_WIDTH = 80
 MACHINE_HEIGHT = 120
 DOOR_WIDTH = 120
-SCORE = 0
+SCORE = 0 
 
 CHARACTER =  pygame.image.load('character.png')
 
@@ -28,7 +28,7 @@ RED = (255, 0, 0)
 BLACK = (0,0,0)
 
 player_start_position = (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT - 100)
-player = (pygame.Rect(player_start_position, (50, 70)),"character.png") #player and image name
+player = (pygame.Rect(player_start_position, (50, 70)),"character.png") #TODO: treba da e pogolem forsure 
 entrance = pygame.Rect(HALF_WINWIDTH - DOOR_WIDTH/2, SCREEN_HEIGHT - 11, DOOR_WIDTH, WALLBORDER+1)
 
 WALLS = [
@@ -39,6 +39,7 @@ WALLS = [
 ]
 
 #mislam deka touple e odgovorot za da znam koja mashina e ;')
+#TODO: variables za brojchinjava plz 
 MACHINES = [
     ##levo
     (pygame.Rect(WALLBORDER+25, 200, MACHINE_WIDTH, MACHINE_HEIGHT), "memorypuzzle"),  
@@ -52,36 +53,28 @@ MACHINES = [
     (pygame.Rect(HALF_WINWIDTH, 300, MACHINE_WIDTH, MACHINE_HEIGHT),"5")
 ]
 
+##TODO: 
+# Score/ score calculation -- separate module for ticket calculation -- each win of game gives 10 tickets, consecutive wins increase by factor of 1.25 
+#make it funkyyy
 
+#TODO: 
+#Stats board -- tuka vlaga movement constraint za vrz toj area, treba da ima text in multiple lines -  mozhe da e clickable ala button 
+#help? - samo render mozhe na boardot jhahahaahha 
+
+#TODO: 
+#Bar with a figure that says hi in a message box when near hahahah just for the plot 
 def draw_interaction_text(text, font, color, surface):
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect()
     textrect.topleft = (500, 90)
     background = pygame.image.load('message.png')
-
-
     if "G" not in text:
         surface.blit(textobj, [textrect.left+30,textrect.top+20])
     else:
         surface.blit(background, [textrect.left-100, textrect.top-45])
         surface.blit(textobj, textrect)
 
-    # se smeni ovaa ideja pochisto izglea vaka
-    # if x > HALF_WINHEIGHT:    
-    # else:
-    #     textrect.topleft = (x+50, y-20)
-
-    # 
-    # bg_r = pygame.transform.flip(background, True, False)
-    # #samo za da ima eden bubble sig ima popametno reshenie ama sega tie se mozhnostite :))
-    # if "G" in text:
-    #     if x < HALF_WINHEIGHT:
-    #         surface.blit(background, [textrect.left-150, textrect.top-30])
-    #     else:
-    #         surface.blit(bg_r, [textrect.left-150, textrect.top-30])
-    # surface.blit(textobj, textrect)
-
-
+#TODO: Add the rest of the games and configure their gameplay 
 def start_game(game_name):
     global SCORE
     if game_name == "memorypuzzle":
@@ -90,6 +83,7 @@ def start_game(game_name):
     if game_name == "slidepuzzle":
         player[0].x,player[0].y, SCORE = slidepuzzlemain(player[0].x, player[0].y, SCORE)
 
+#TODO: proximity za chovecheto na shankot 
 def check_proximity(player, machines, distance=20):
     for machine in machines:
         if player[0].colliderect(machine[0].inflate(distance, distance)):
@@ -107,39 +101,14 @@ def handle_player_interaction(keys, player, machines):
         pygame.event.clear() #so start game go reshavame choiceot na script
         
 
-
 def draw_menu():
     SCREEN.fill((0, 0, 0))
     welcome_text = BASICFONT.render("Welcome! Press Enter to start or Escape to quit", True, WHITE)
     SCREEN.blit(welcome_text, (SCREEN_WIDTH // 2 - welcome_text.get_width() // 2, SCREEN_HEIGHT // 2 - welcome_text.get_height() // 2))
     pygame.display.flip()
-
-
-# def handle_player_movement_ez(keys, player_speed=9):
-#     if keys[K_LEFT]:
-#         player[0].x -= player_speed
-#     if keys[K_RIGHT]:
-#         player[0].x += player_speed
-#     if keys[K_UP]:
-#         player[0].y -= player_speed
-#     if keys[K_DOWN]:
-#         player[0].y += player_speed
-
-#     ## ova 10 mozhe da e static var -- stana wallborder toa 10 hahahaha
-#     if player[0].left <= WALLBORDER: player[0].left = WALLBORDER
-#     if player[0].right >= SCREEN_WIDTH-WALLBORDER: player[0].right = SCREEN_WIDTH -WALLBORDER
-#     if player[0].top <= WALLBORDER: player[0].top = WALLBORDER
-#     if player[0].bottom >= SCREEN_HEIGHT-WALLBORDER: player[0].bottom = SCREEN_HEIGHT-WALLBORDER
-
-#     for machine in MACHINES:
-#         if player[0].left  <= machine[0].left+machine[0].width: player[0].left = machine[0].left+machine[0].width
-#         if player[0].right >= machine[0].left: player[0].right = machine[0].left
-#         if player[0].top   <= machine[0].bottom : player[0].top = machine[0].bottom
-#         if player[0].bottom>= machine[0].bottom +machine[0].height: player[0].bottom = machine[0].bottom +machine[0].height
-           
+  
 
 def handle_player_movement(keys, player_speed=9):
-
     global CHARACTER
 
     PLAYER_R = pygame.image.load('character.png')
@@ -208,7 +177,6 @@ def main():
             SCREEN.blit(img2, (WALLBORDER, WALLBORDER+150))
             SCREEN.blit(img3, (WALLBORDER, WALLBORDER))
             for machine in MACHINES:
-               #pygame.draw.rect(SCREEN, RED, machine[0])
                #Convert alpha ni treba radi pngto da e transparent ugh ;(
                m = pygame.image.load("machine.PNG").convert_alpha()
                SCREEN.blit(m, (machine[0].left, machine[0].top))
