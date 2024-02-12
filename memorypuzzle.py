@@ -8,7 +8,7 @@ from pygame.locals import *
 from config import FPS, WINDOWHEIGHT, WINDOWWIDTH
 from config import GRAY, NAVYBLUE, WHITE, RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN
 from config import DONUT, SQUARE, DIAMOND, LINES, OVAL
-
+from config import calculate_score
 
 REVEALSPEED = 8 # speed boxes' sliding reveals and covers
 BOXSIZE = 40 # size of box height & width in pixels
@@ -39,7 +39,8 @@ assert len(ALLCOLORS) * len(ALLSHAPES) * 2 >= BOARDWIDTH * BOARDHEIGHT, "Board i
 PLAYING = True
 
 def main(x, y, score):
-    global PLAYING
+    global PLAYING, SCORE
+    SCORE = 0
     PLAYING = True
     if PLAYING:
         global FPSCLOCK, DISPLAYSURF
@@ -117,6 +118,7 @@ def main(x, y, score):
                                 startGameAnimation(mainBoard)
 
                         elif hasWon(revealedBoxes): # check if all pairs found
+                            SCORE = calculate_score(SCORE, 100)
                             gameWonAnimation(mainBoard)
                             bling(BGCOLOR)
                             pygame.time.wait(2000)
@@ -136,6 +138,7 @@ def main(x, y, score):
             # Redraw the screen and wait a clock tick.
             pygame.display.update()
             FPSCLOCK.tick(FPS)
+    score += SCORE
     return x,y, score
 
 def displayPossibleMoves(possible_moves):

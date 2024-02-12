@@ -148,8 +148,9 @@ PIECES = {'S': S_SHAPE_TEMPLATE,
 
 PLAYING = True
 
-def main(x,y,score):
-    global FPSCLOCK, DISPLAYSURF, BASICFONT, BIGFONT, PLAYING
+def main(x, y, score):
+    global FPSCLOCK, DISPLAYSURF, BASICFONT, BIGFONT, PLAYING, SCORE
+    SCORE = 0
     PLAYING = True
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
@@ -166,6 +167,7 @@ def main(x,y,score):
             pygame.mixer.music.load(APATH+'/tetrisc.mid')
         pygame.mixer.music.play(-1, 0.0)
         runGame()
+        score +=SCORE
         pygame.mixer.music.stop()
         showTextScreen('Game Over')
 
@@ -173,7 +175,7 @@ def main(x,y,score):
 
 
 def runGame():
-    global PLAYING
+    global PLAYING, SCORE
     # setup variables for the start of the game
     board = getBlankBoard()
     lastMoveDownTime = time.time()
@@ -182,8 +184,7 @@ def runGame():
     movingDown = False # note: there is no movingUp variable
     movingLeft = False
     movingRight = False
-    score = 0
-    level, fallFreq = calculateLevelAndFallFreq(score)
+    level, fallFreq = calculateLevelAndFallFreq(SCORE)
 
     fallingPiece = getNewPiece()
     nextPiece = getNewPiece()
@@ -278,8 +279,8 @@ def runGame():
             if not isValidPosition(board, fallingPiece, adjY=1):
                 # falling piece has landed, set it on the board
                 addToBoard(board, fallingPiece)
-                score += removeCompleteLines(board)
-                level, fallFreq = calculateLevelAndFallFreq(score)
+                SCORE += removeCompleteLines(board)
+                level, fallFreq = calculateLevelAndFallFreq(SCORE)
                 fallingPiece = None
             else:
                 # piece did not land, just move the piece down
@@ -289,7 +290,7 @@ def runGame():
         # drawing everything on the screen
         DISPLAYSURF.fill(BGCOLOR)
         drawBoard(board)
-        drawStatus(score, level)
+        drawStatus(SCORE, level)
         drawNextPiece(nextPiece)
         if fallingPiece != None:
             drawPiece(fallingPiece)

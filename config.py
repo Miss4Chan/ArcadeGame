@@ -43,6 +43,10 @@ OVAL = 'oval'
 #damn ova me izlude - treba da se pazi na path 
 APATH = "/Users/despinamisheva/Arcade_Game_Project_201531/assets"
 
+def calculate_score(total_score, score_now):
+    total_score+= score_now
+    return total_score
+
 
 
 

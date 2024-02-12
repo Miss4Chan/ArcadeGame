@@ -6,10 +6,11 @@
 import pygame, sys, random
 from pygame.locals import *
 from config import FPS, WINDOWHEIGHT, WINDOWWIDTH
+from config import calculate_score
 # Create the constants (go ahead and experiment with different values)
 #Change 1
-BOARDWIDTH = 3  # number of columns in the board
-BOARDHEIGHT = 3 # number of rows in the board
+BOARDWIDTH = 2  # number of columns in the board
+BOARDHEIGHT = 2 # number of rows in the board
 TILESIZE = 80
 BLANK = None
 
@@ -41,9 +42,10 @@ blankxpos, blankypos = 0,0
 PLAYING = True
 
 def main(x, y, score):
-    global PLAYING
+    global PLAYING, SCORE
     #Change 2 
     PLAYING = True
+    SCORE = 0
     if PLAYING:
         global FPSCLOCK, DISPLAYSURF, BASICFONT, RESET_SURF, RESET_RECT, NEW_SURF, NEW_RECT, SOLVE_SURF, SOLVE_RECT, HELP_SURF, HELP_RECT, HELP_ACTIVE 
         global blankxpos, blankypos
@@ -70,7 +72,11 @@ def main(x, y, score):
             slideTo = None # the direction, if any, a tile should slide
             msg = 'Click tile or press arrow keys to slide.' # contains the message to show in the upper left corner.
             if mainBoard == SOLVEDBOARD:
+                SCORE = calculate_score(SCORE,100)
                 msg = 'Solved!'
+                pygame.time.delay(100)
+                mainBoard, solutionSeq = generateNewPuzzle(20) # clicked on New Game button
+                allMoves = []
             if HELP_ACTIVE:
                 help(mainBoard)
             else:
@@ -89,9 +95,10 @@ def main(x, y, score):
                         elif NEW_RECT.collidepoint(event.pos):
                             mainBoard, solutionSeq = generateNewPuzzle(20) # clicked on New Game button
                             allMoves = []
-                        elif SOLVE_RECT.collidepoint(event.pos):
-                            resetAnimation(mainBoard, solutionSeq + allMoves) # clicked on Solve button
-                            allMoves = []
+                        #nema solve ako sakash poeni huhhhhh :)))
+                        #elif SOLVE_RECT.collidepoint(event.pos):
+                        #    resetAnimation(mainBoard, solutionSeq + allMoves) # clicked on Solve button
+                        #    allMoves = []
                         #Change 2 
                         elif HELP_RECT.collidepoint(event.pos):
                             HELP_ACTIVE = True
@@ -126,6 +133,7 @@ def main(x, y, score):
                 allMoves.append(slideTo) # record the slide
             pygame.display.update()
             FPSCLOCK.tick(FPS)
+    score += SCORE
     return x,y, score
 
 #Change 2

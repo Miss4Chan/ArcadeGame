@@ -6,10 +6,14 @@ from slidepuzzle import main as slidepuzzlemain
 from simulate import main as simulatemain
 from wormy import main as wormymain
 from tetromino import main as tetrominomain
+from broken import main as brokenmain
 
 #import os
 #print("Current Working Directory:", os.getcwd())
-##for future reference -- each machine gives a piece of the broken one and at the end it unlocks 
+##for future reference -- 
+# 1.each machine gives a piece of the broken one and at the end it unlocks 
+# 2. add a bar in the bottom left corner 
+# 3. 
 #The setuppp :))
 pygame.init()
 from config import FPS, WINDOWHEIGHT, WINDOWWIDTH, APATH
@@ -27,7 +31,7 @@ DOOR_WIDTH = 120
 SCORE = 0 
 SCOREBOARD = pygame.Rect(595, 340, 205, 160)
 CHARACTER =  pygame.image.load(APATH + "/character.png")
-
+BROKEN_TEXT = "/╲/\༼ ʘ̆~◞ꔢ◟~ʘ̆ ༽/\╱\\"
 
 
 
@@ -43,39 +47,32 @@ WALLS = [
 ]
 
 #mislam deka touple e odgovorot za da znam koja mashina e ;')
-#TODO: variables za brojchinjava plz 
 MACHINES = [
     ##levo
     (pygame.Rect(WALLBORDER+25, 200, MACHINE_WIDTH, MACHINE_HEIGHT), "memorypuzzle"),  
     #gore
     (pygame.Rect(HALF_WINWIDTH-MACHINE_WIDTH-10, WALLBORDER+70, MACHINE_WIDTH, MACHINE_HEIGHT),"slidepuzzle"),
     (pygame.Rect(HALF_WINWIDTH, WALLBORDER+70, MACHINE_WIDTH, MACHINE_HEIGHT),"simulate"),
-    #desno -- ovaa treba da ne raboti TODO: broken machine image  +  scriot that shows errror when interactед
-    (pygame.Rect(WINDOWWIDTH-WALLBORDER-MACHINE_WIDTH-30, 200, MACHINE_WIDTH, MACHINE_HEIGHT),"/╲/\༼ ʘ̆~◞ꔢ◟~ʘ̆ ༽/\╱\\"),
+    #desno -- ovaa treba da ne raboti  scriot that shows errror when interactеd
+    (pygame.Rect(WINDOWWIDTH-WALLBORDER-MACHINE_WIDTH-30, 200, MACHINE_WIDTH, MACHINE_HEIGHT),BROKEN_TEXT),
     #sredina
     (pygame.Rect(HALF_WINWIDTH-MACHINE_WIDTH-10, 300, MACHINE_WIDTH, MACHINE_HEIGHT),"wormy"),
     (pygame.Rect(HALF_WINWIDTH, 300, MACHINE_WIDTH, MACHINE_HEIGHT),"tetromino")
 ]
 
-##TODO: 
-# Score/ score calculation -- separate module for ticket calculation -- each win of game gives 10 tickets, consecutive wins increase by factor of 1.25 
-#make it funkyyy
 
-#TODO: 
-#Stats board -- tuka vlaga movement constraint za vrz toj area, treba da ima text in multiple lines -  mozhe da e clickable ala button 
-#help? - samo render mozhe na boardot jhahahaahha 
+#TODO: help? - samo render mozhe na boardot jhahahaahha 
 def draw_stats_board(text, font, color, surface):
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect()
     textrect.topleft = (595, 340)
     background = pygame.image.load(APATH+'/scoreboard.png')
+    if "Score" in text:
+        surface.blit(background,textrect)
+        surface.blit(textobj, [textrect.left + 40,textrect.top+50])
+    else:
+        surface.blit(textobj, [textrect.left + 60,textrect.top+80])
 
-    surface.blit(background,textrect)
-    surface.blit(textobj, [textrect.left + 60,textrect.top+50])
-
-
-#TODO: 
-#Bar with a figure that says hi in a message box when near hahahah just for the plot 
 def draw_interaction_text(text, font, color, surface):
     textobj = font.render(text, 1, color)
     textrect = textobj.get_rect()
@@ -87,7 +84,6 @@ def draw_interaction_text(text, font, color, surface):
         surface.blit(background, [textrect.left-100, textrect.top-45])
         surface.blit(textobj, textrect)
 
-#TODO: Add the rest of the games and configure their gameplay 
 def start_game(game_name):
     global SCORE
     if game_name == "memorypuzzle":
@@ -101,8 +97,11 @@ def start_game(game_name):
         player[0].x,player[0].y, SCORE = wormymain(player[0].x, player[0].y, SCORE)
     if game_name == "tetromino":
         player[0].x,player[0].y, SCORE = tetrominomain(player[0].x, player[0].y, SCORE)
+    if game_name == BROKEN_TEXT:
+        brokenmain()
 
-#TODO: proximity za chovecheto na shankot 
+
+
 def check_proximity(player, machines, distance=20):
     for machine in machines:
         if player[0].colliderect(machine[0].inflate(distance, distance)):
@@ -113,8 +112,6 @@ def check_proximity(player, machines, distance=20):
 def handle_player_interaction(keys, player, machines):
     close_machine = check_proximity(player, machines)
     if close_machine and keys[K_g]:
-        # Placeholder for activating something
-        #TODO: ova tuka mn bitno vo zavisnost od koja mashina e 
         print("Activated machine!") 
         start_game(close_machine[1])
         pygame.event.clear() #so start game go reshavame choiceot na script
@@ -190,20 +187,17 @@ def main():
             SCREEN.fill((0, 0, 0))
             for wall in WALLS:
                 pygame.draw.rect(SCREEN, WHITE, wall)
-            #pygame.draw.rect(SCREEN, BLUE, player[0])
             pygame.draw.rect(SCREEN, GREEN, entrance)
             img = pygame.image.load(APATH+"/bg_wall.png").convert()
             img2= pygame.image.load(APATH+"/bg_floor.png").convert()
             img3=pygame.image.load(APATH+"/bg_lights.png").convert()
             SCREEN.blit(img, (WALLBORDER, WALLBORDER+50))
-            ##img4=pygame.image.load("bar.png").convert_alpha()
             
             SCREEN.blit(img2, (WALLBORDER, WALLBORDER+150))
             SCREEN.blit(img3, (WALLBORDER, WALLBORDER))
-            ##SCREEN.blit(img4, (WALLBORDER, WALLBORDER+380))
             for machine in MACHINES:
                #Convert alpha ni treba radi pngto da e transparent ugh ;(
-                if machine[1]=="(¬☉≎☉)¬":
+                if machine[1]==BROKEN_TEXT:
                     m =  pygame.image.load(APATH+"/broken_machine.png").convert_alpha()
                 else:
                     m = pygame.image.load(APATH+"/machine.PNG").convert_alpha()
@@ -224,7 +218,8 @@ def main():
                 draw_interaction_text("Press 'G' to activate ", BASICFONT, BLACK, SCREEN)
                 draw_interaction_text(close_machine[1], BASICFONT, BLACK, SCREEN)
 
-            draw_stats_board("Score: ", BASICFONT, WHITE,SCREEN)
+            draw_stats_board("Score:", BASICFONT, WHITE,SCREEN)
+            draw_stats_board(str(SCORE), BASICFONT, WHITE,SCREEN)
 
             if player[0].colliderect(entrance):
                 game_state = "menu"

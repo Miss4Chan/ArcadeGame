@@ -70,6 +70,7 @@ def main(x,y,score):
     PLAYING = True
     global FPSCLOCK, DISPLAYSURF, BASICFONT, FPS, OLD_SECONDS, SPAWN_SECOND, SCORE
 
+    SCORE = 0
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
@@ -79,13 +80,14 @@ def main(x,y,score):
     showStartScreen()
     while PLAYING:
         runGame()
+        score += SCORE
         #Change 1
         FPS = 5
         OLD_SECONDS = 0
         SPAWN_SECOND = False
-        #showGameOverScreen()
+        pygame.time.delay(100)
+        showGameOverScreen()
         showMenu()
-        SCORE = 0
     return x, y, score
 
 
@@ -197,11 +199,9 @@ def runGame():
         
         # check if the worm has hit itself or the edge
         if wormCoords[HEAD]['x'] == -1 or wormCoords[HEAD]['x'] == CELLWIDTH or wormCoords[HEAD]['y'] == -1 or wormCoords[HEAD]['y'] == CELLHEIGHT:
-            SCORE+= len(wormCoords) -3
             return # game over
         for wormBody in wormCoords[1:]:
             if wormBody['x'] == wormCoords[HEAD]['x'] and wormBody['y'] == wormCoords[HEAD]['y']:
-                SCORE+= len(wormCoords) -3
                 return # game over
 
         #case koga og udril vo vtoriot bilo kade including glavata
@@ -226,6 +226,7 @@ def runGame():
         if wormCoords[HEAD]['x'] == apple['x'] and wormCoords[HEAD]['y'] == apple['y']:
             # don't remove worm's tail segment
             apple = getRandomLocation() # set a new apple somewhere
+            SCORE+= 1
         #Change 2
         elif wormCoords[HEAD]['x'] == blue_apple['x'] and wormCoords[HEAD]['y'] == blue_apple['y']:
             blue_apple = getRandomLocation()
@@ -286,7 +287,7 @@ def runGame():
             drawApple(blue_apple, BLACK)
         bblink = not bblink
         
-        drawScore(len(wormCoords) - 3 + SCORE)
+        drawScore(SCORE)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
@@ -349,6 +350,8 @@ def getRandomLocation():
 
 
 def showGameOverScreen():
+    global SCORE
+    SCORE = 0
     gameOverFont = pygame.font.Font('freesansbold.ttf', 150)
     gameSurf = gameOverFont.render('Game', True, WHITE)
     overSurf = gameOverFont.render('Over', True, WHITE)

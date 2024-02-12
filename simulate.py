@@ -35,7 +35,7 @@ def main(x, y, score):
     global PLAYING
     PLAYING = True
     if PLAYING:
-        global FPSCLOCK, DISPLAYSURF, BASICFONT, BEEP1, BEEP2, BEEP3, BEEP4
+        global FPSCLOCK, DISPLAYSURF, BASICFONT, BEEP1, BEEP2, BEEP3, BEEP4, SCORE
 
         pygame.init()
         FPSCLOCK = pygame.time.Clock()
@@ -56,7 +56,6 @@ def main(x, y, score):
         pattern = [] # stores the pattern of colors
         currentStep = 0 # the color the player must push next
         lastClickTime = 0 # timestamp of the player's last button push
-        score = 0
         # when False, the pattern is playing. when True, waiting for the player to click a colored button:
         waitingForInput = False
 
@@ -65,7 +64,7 @@ def main(x, y, score):
             DISPLAYSURF.fill(bgColor)
             drawButtons()
 
-            scoreSurf = BASICFONT.render('Score: ' + str(score), 1, WHITE)
+            scoreSurf = BASICFONT.render('Score: ' + str(SCORE), 1, WHITE)
             scoreRect = scoreSurf.get_rect()
             scoreRect.topleft = (WINDOWWIDTH - 100, 10)
             DISPLAYSURF.blit(scoreSurf, scoreRect)
@@ -111,7 +110,7 @@ def main(x, y, score):
                     if currentStep == len(pattern):
                         # pushed the last button in the pattern
                         changeBackgroundAnimation()
-                        score += 1
+                        SCORE += 1
                         waitingForInput = False
                         currentStep = 0 # reset back to first step
 
@@ -122,7 +121,8 @@ def main(x, y, score):
                     pattern = []
                     currentStep = 0
                     waitingForInput = False
-                    score = 0
+                    score+= SCORE
+                    SCORE = 0
                     pygame.time.wait(1000)
                     changeBackgroundAnimation()
 
