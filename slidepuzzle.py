@@ -5,33 +5,24 @@
 
 import pygame, sys, random
 from pygame.locals import *
-
+from config import FPS, WINDOWHEIGHT, WINDOWWIDTH
 # Create the constants (go ahead and experiment with different values)
 #Change 1
 BOARDWIDTH = 3  # number of columns in the board
 BOARDHEIGHT = 3 # number of rows in the board
 TILESIZE = 80
-WINDOWWIDTH = 800
-WINDOWHEIGHT = 650
-FPS = 30
 BLANK = None
 
 X=0
 Y=0
 SCORE =0 
 
-#                 R    G    B
-BLACK =         (  0,   0,   0)
-WHITE =         (255, 255, 255)
-BRIGHTBLUE =    (  0,  50, 255)
-DARKTURQUOISE = (  3,  54,  73)
-GREEN =         (  0, 204,   0)
-RED =  (255,0,0)
+from config import BLACK,WHITE, BLUE, DARKTURQUOISE, GREEN, RED
 
 BGCOLOR = DARKTURQUOISE
 TILECOLOR = GREEN
 TEXTCOLOR = WHITE
-BORDERCOLOR = BRIGHTBLUE
+BORDERCOLOR = BLUE
 BASICFONTSIZE = 20
 
 BUTTONCOLOR = WHITE
@@ -41,10 +32,8 @@ MESSAGECOLOR = WHITE
 XMARGIN = int((WINDOWWIDTH - (TILESIZE * BOARDWIDTH + (BOARDWIDTH - 1))) / 2)
 YMARGIN = int((WINDOWHEIGHT - (TILESIZE * BOARDHEIGHT + (BOARDHEIGHT - 1))) / 2)
 
-UP = 'up'
-DOWN = 'down'
-LEFT = 'left'
-RIGHT = 'right'
+from config import UP, DOWN, LEFT, RIGHT
+
 
 
 blankxpos, blankypos = 0,0
